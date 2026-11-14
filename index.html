@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Förder-Check Finanzcoach Gordon</title>
+<style>
+/* Layout-Idee: Sprechstunde. Links die Anamnese (Eingaben) auf Navy, rechts der Befund als helles Papierblatt. Eine Welt, ein Thema: dunkel. */
+:root{
+  color-scheme: dark;
+  --navy:#081C38;
+  --navy-2:#0F2A50;
+  --line:#27436B;
+  --gold:#C9A254;
+  --gold-soft:#E4CB93;
+  --ink:#F4F1EA;
+  --muted:#A9B6CA;
+  --paper:#F5F1E7;
+  --paper-ink:#0B1F3D;
+  --paper-muted:#5A6883;
+  --paper-line:#D9D0BC;
+  --display:"Avenir Next","Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold-soft);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+.strip{background:var(--gold);color:var(--navy);font-size:14px;font-weight:600}
+.strip a{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:10px 20px;max-width:1080px;margin:0 auto;text-decoration:none}
+.strip span:last-child{white-space:nowrap}
+
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0 0}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand b{color:var(--gold);font-weight:800}
+.claim{color:var(--muted);font-size:14px}
+
+.hero{padding:44px 0 30px;max-width:720px}
+.eyebrow{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 14px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,7.4vw,60px);line-height:1.02;letter-spacing:-.025em;margin:0 0 18px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:18px;color:var(--muted);margin:0;max-width:58ch}
+.lede strong{color:var(--ink);font-weight:600}
+
+.calc{display:grid;gap:22px;grid-template-columns:1fr;padding-bottom:56px}
+@media(min-width:860px){.calc{grid-template-columns:1fr 1fr;align-items:start;gap:32px}.befund{position:sticky;top:20px}}
+
+.panel{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:24px 20px}
+.step{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 20px}
+.step i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--navy);font-size:13px;letter-spacing:0}
+.panel .step{color:var(--gold-soft)}
+.field{display:grid;gap:10px;margin-bottom:26px}
+.field:last-child{margin-bottom:0}
+label,.lab{font-weight:600;font-size:15px}
+.hint{color:var(--muted);font-size:13.5px;margin:0}
+
+.amount{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:700;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.amount small{font-family:var(--body);font-size:15px;font-weight:500;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--line)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);margin-top:-10px;box-shadow:0 0 0 1px var(--gold)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);box-shadow:0 0 0 1px var(--gold)}
+.staffel{display:grid;grid-template-columns:30fr 120fr 50fr;gap:3px;font-size:12px;color:var(--muted);margin:0 11px}
+.staffel div{border-top:4px solid var(--line);padding-top:6px;line-height:1.25}
+.staffel div.on{border-color:var(--gold);color:var(--ink)}
+.staffel b{display:block;font-weight:600}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+input[type=number],select{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-variant-numeric:tabular-nums}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat;padding-right:40px}
+.stepper{display:grid;grid-template-columns:48px 1fr 48px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--navy)}
+.stepper button{font:inherit;font-size:22px;background:transparent;color:var(--gold);border:0;cursor:pointer;height:48px}
+.stepper button:hover{background:var(--line)}
+.stepper output{display:grid;place-items:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+
+details{border-top:1px solid var(--line);margin-top:26px;padding-top:18px}
+summary{cursor:pointer;font-weight:600;color:var(--gold-soft);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;line-height:1;color:var(--gold)}
+details[open] summary::after{content:"–"}
+details .field:first-of-type{margin-top:20px}
+
+.befund{background:var(--paper);color:var(--paper-ink);border-radius:14px;padding:24px 20px 22px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.befund .step{color:var(--paper-muted);margin-bottom:6px}
+.befund .step i{background:var(--paper-ink);color:var(--paper)}
+.meta{font-size:13px;color:var(--paper-muted);margin:0 0 18px;padding-bottom:14px;border-bottom:1px dashed var(--paper-line)}
+.sum{font-family:var(--display);font-weight:800;font-size:clamp(60px,17vw,92px);line-height:.95;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:0}
+.sum span{font-size:.45em;margin-left:.12em}
+.sumlab{font-weight:600;margin:6px 0 18px}
+.rows{list-style:none;margin:0;padding:0;border-top:1px solid var(--paper-line)}
+.rows li{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--paper-line);font-size:15px}
+.rows li span:last-child{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rows li.off{color:var(--paper-muted)}
+.rows li.off span:last-child{font-weight:400}
+.quote{font-size:14px;color:var(--paper-muted);margin:14px 0 0}
+.rx{margin:16px 0 0;padding:12px 14px;border-left:4px solid var(--gold);background:#EDE6D4;border-radius:0 8px 8px 0;font-size:14.5px}
+.rx b{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-muted);margin-bottom:2px}
+.btn{display:block;text-align:center;text-decoration:none;font-weight:600;font-size:16px;padding:15px 18px;border-radius:10px;background:var(--gold);color:var(--navy);border:0;cursor:pointer}
+.btn:hover{background:var(--gold-soft)}
+.befund .btn{background:var(--paper-ink);color:var(--paper);margin-top:18px}
+.befund .btn:hover{background:#17335F}
+
+section.band{border-top:1px solid var(--line);padding:48px 0}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.1;letter-spacing:-.02em;margin:0 0 22px;text-wrap:balance;max-width:22ch}
+.facts{display:grid;gap:0;grid-template-columns:1fr;border-top:1px solid var(--line)}
+.fact{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+.fact strong{font-family:var(--display);font-weight:800;font-size:30px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1}
+.fact p{margin:0;color:var(--muted)}
+.fact p b{color:var(--ink);font-weight:600;display:block}
+
+.now{display:grid;gap:24px;grid-template-columns:1fr}
+@media(min-width:860px){.now{grid-template-columns:5fr 6fr;gap:48px}}
+.now p{color:var(--muted);margin:0 0 14px;max-width:60ch}
+.now ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.now li{padding-left:22px;position:relative}
+.now li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:2px;background:var(--gold)}
+
+.doc{display:grid;gap:22px;grid-template-columns:1fr;align-items:start}
+@media(min-width:860px){.doc{grid-template-columns:6fr 5fr;gap:48px}}
+.sig{display:flex;gap:16px;align-items:center;margin-bottom:16px}
+.mono{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:28px;color:var(--gold);flex:none}
+.foto{width:96px;height:96px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;flex:none}
+.sig b{font-family:var(--display);font-size:22px;font-weight:700;display:block;line-height:1.2}
+.sig span{color:var(--muted);font-size:14.5px}
+.doc p{color:var(--muted);margin:0 0 14px;max-width:58ch}
+.contact{display:grid;gap:12px}
+.contact .line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;flex-wrap:wrap}
+.contact .line span:first-child{color:var(--muted)}
+.btn.ghost{background:transparent;color:var(--gold-soft);border:1px solid var(--gold)}
+.btn.ghost:hover{background:var(--navy-2)}
+.draft{border:1px dashed var(--gold);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--gold-soft)}
+
+footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--muted);font-size:13px}
+footer p{margin:0 0 12px;max-width:90ch}
+footer nav{display:flex;gap:18px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="strip"><a href="#kontakt" data-cta><span>Riester-Neuverträge nach altem Recht gibt es nur noch bis 31.12.2026.</span><span>Termin bis 16.12. sichern →</span></a></div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Finanzcoach <b>Gordon</b></div>
+    <div class="claim">Der Arzt für Ihre Finanzen</div>
+  </header>
+
+  <div class="hero">
+    <p class="eyebrow">Altersvorsorgedepot 2027</p>
+    <h1>Was zahlt Ihnen der Staat <em>dazu?</em></h1>
+    <p class="lede">Bis zu <strong>540 € Grundzulage</strong> im Jahr, <strong>300 € je Kind</strong> und einmalig <strong>200 €</strong> für alle unter 25. Ihr persönlicher Betrag steht in 30 Sekunden fest.</p>
+  </div>
+
+  <main class="calc" id="rechner">
+    <form class="panel" id="f" autocomplete="off">
+      <p class="step"><i>1</i> Ihre Angaben</p>
+
+      <div class="field">
+        <label for="beitrag">Ihr Eigenbeitrag im Monat</label>
+        <div class="amount"><span id="beitragOut">100</span> € <small>= <span id="jahrOut">1.200</span> € im Jahr</small></div>
+        <input type="range" id="beitrag" min="0" max="200" step="5" value="100">
+        <div class="staffel" aria-hidden="true">
+          <div id="z1"><b>50 %</b>bis 30 €</div>
+          <div id="z2"><b>25 % Zulage</b>bis 150 €</div>
+          <div id="z3"><b>0 %</b>darüber</div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="jahrgang">Geburtsjahr</label>
+          <input type="number" id="jahrgang" inputmode="numeric" min="1940" max="2011" value="1992">
+        </div>
+        <div class="field">
+          <span class="lab" id="kLab">Kinder mit Kindergeld</span>
+          <div class="stepper" role="group" aria-labelledby="kLab">
+            <button type="button" id="kMinus" aria-label="Ein Kind weniger">−</button>
+            <output id="kinder" aria-live="polite">1</output>
+            <button type="button" id="kPlus" aria-label="Ein Kind mehr">+</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Beispielwerte. Stellen Sie Ihre eigenen ein.</p>
+
+      <details id="det">
+        <summary>Genauer rechnen mit Steuervorteil</summary>
+        <div class="field">
+          <label for="status">Berufliche Situation</label>
+          <select id="status">
+            <option value="an">Angestellt oder in Ausbildung</option>
+            <option value="be">Beamtin / Beamter</option>
+            <option value="se">Selbstständig</option>
+            <option value="so">Elternzeit, Minijob mit Rentenversicherung, Pflege</option>
+            <option value="mi">Nicht selbst förderberechtigt, aber Ehepartner</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="brutto">Bruttoeinkommen im Jahr (€)</label>
+          <input type="number" id="brutto" inputmode="numeric" min="0" step="1000" placeholder="z. B. 45000">
+          <p class="hint">Das Finanzamt prüft automatisch, ob Ihnen über die Zulagen hinaus eine Steuererstattung zusteht. Hier grob geschätzt für Einzelveranlagung.</p>
+        </div>
+      </details>
+    </form>
+
+    <aside class="befund" aria-live="polite">
+      <p class="step"><i>2</i> Ihr Förder-Befund</p>
+      <p class="meta">Beitragsjahr 2027 · unverbindliche Beispielrechnung</p>
+      <p class="sum"><span id="sum" style="font-size:1em;margin:0">690</span><span>€</span></p>
+      <p class="sumlab">Förderung vom Staat im ersten Jahr</p>
+      <ul class="rows">
+        <li id="rGrund"><span>Grundzulage</span><span>390 €</span></li>
+        <li id="rKind"><span>Kinderzulage</span><span>300 €</span></li>
+        <li id="rBonus"><span>Berufseinsteigerbonus, einmalig</span><span>–</span></li>
+        <li id="rSteuer"><span>Zusätzliche Steuererstattung, geschätzt</span><span>–</span></li>
+      </ul>
+      <p class="quote" id="quote"></p>
+      <div class="rx"><b>Empfehlung</b><span id="rx"></span></div>
+      <a class="btn" href="#kontakt" data-cta>Befund besprechen: Termin bis 16.12. sichern</a>
+    </aside>
+  </main>
+</div>
+
+<section class="band">
+  <div class="wrap">
+    <h2>So setzt sich die Förderung zusammen</h2>
+    <div class="facts">
+      <div class="fact"><strong>540 €</strong><p><b>Grundzulage pro Jahr</b>50 Cent je Euro auf die ersten 360 € Jahresbeitrag, danach 25 Cent je Euro bis 1.800 €. Voll ausgeschöpft mit 150 € im Monat.</p></div>
+      <div class="fact"><strong>300 €</strong><p><b>Kinderzulage je Kind und Jahr</b>1 € Zulage je Euro Eigenbeitrag. Die volle Zulage gibt es schon ab 25 € im Monat, für jedes Kind mit Kindergeld.</p></div>
+      <div class="fact"><strong>200 €</strong><p><b>Berufseinsteigerbonus, einmalig</b>Für alle, die zu Beginn des Beitragsjahres noch keine 25 sind.</p></div>
+      <div class="fact"><strong>10 €</strong><p><b>Mindestbeitrag im Monat</b>Ab 120 € Eigenbeitrag im Jahr fließen Zulagen. Eine einkommensabhängige Mindestzahlung wie bei Riester gibt es nicht mehr.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap now">
+    <h2>Warum ein Gespräch noch 2026 sinnvoll ist</h2>
+    <div>
+      <p>Das Altersvorsorgedepot startet am 1. Januar 2027. Bis dahin steht eine Entscheidung an, die sich später nicht nachholen lässt.</p>
+      <ul>
+        <li>Riester-Verträge nach bisherigem Fördermodell können nur noch bis 31.12.2026 abgeschlossen werden.</li>
+        <li>Verträge, die bis dahin bestehen, behalten Bestandsschutz und laufen mit der alten Förderung weiter.</li>
+        <li>Ein Wechsel in die neue Förderung bleibt ab 2027 möglich. Der Weg zurück nicht.</li>
+        <li>Für kleine Beiträge und Familien kann die alte Förderung günstiger sein. Das rechne ich mit Ihnen für beide Varianten durch.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="kontakt">
+  <div class="wrap doc">
+    <div>
+      <div class="sig"><img class="foto" src="data:image/jpeg;base64,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" alt="Gordon Kaiser" width="96" height="96"><div><b>Gordon Kaiser</b><span>Finanzcoach Gordon · Blankenburg (Harz)</span></div></div>
+      <p>Ich rechne mit Ihnen aus, was Ihnen zusteht, und vergleiche alte und neue Förderung für Ihre Situation. Bei Ihnen zu Hause, im Büro in Blankenburg oder online.</p>
+      <p>Altersvorsorge, Absicherung und Vermögensaufbau gehören zusammen. Deshalb schauen wir auf das Ganze und nicht nur auf ein Produkt.</p>
+    </div>
+    <div class="contact" id="contact"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Unverbindliche Beispielrechnung auf Basis des Altersvorsorgereformgesetzes (BGBl. I 2026 Nr. 156) für das Beitragsjahr 2027, Stand 14.11.2026. Die tatsächliche Förderung hängt von Ihren persönlichen Verhältnissen und der Festsetzung durch Zulagenstelle und Finanzamt ab. Die Steuererstattung ist eine grobe Schätzung. Diese Seite ersetzt keine Anlage- oder Steuerberatung.</p>
+    <p>Gordon Kaiser ist selbstständiger Vermögensberater für die Deutsche Vermögensberatung.</p>
+    <nav id="legal"></nav>
+  </div>
+</footer>
+
+<script>
+/* ====== HIER IHRE DATEN EINTRAGEN ====== */
+var CONFIG = {
+  bookingUrl: "https://outlook.office.com/book/GordonKaiserDeutscheVermgensberatung@dvag02.onmicrosoft.com/?ismsaljsauthenabled",
+  whatsapp: "491737483298",        // Nummer international ohne +, z. B. 4915112345678
+  phone: "03944 3674437",
+  mobile: "0173 7483298",
+  email: "Gordon.Kaiser@dvag.de",
+  address: "Mauerstraße 4, 38889 Blankenburg",
+  impressumUrl: "https://www.dvag.de/gordon.kaiser/impressum.html",
+  datenschutzUrl: "https://www.dvag.de/gordon.kaiser/datenschutz.html"
+};
+/* ======================================= */
+
+var $ = function(id){ return document.getElementById(id); };
+var eur = new Intl.NumberFormat("de-DE", {maximumFractionDigits:0});
+var kinder = 1;
+
+function grenzsteuersatz(zvE){            // Einkommensteuertarif 2026, Grundtabelle
+  if (zvE <= 12348) return 0;
+  if (zvE <= 17799) return (2*914.51*((zvE-12348)/1e4) + 1400)/1e4;
+  if (zvE <= 69878) return (2*173.10*((zvE-17799)/1e4) + 2397)/1e4;
+  if (zvE <= 277825) return 0.42;
+  return 0.45;
+}
+
+function rechne(monat, jahrgang, kinder, status, brutto){
+  var b = monat*12, f = Math.min(b, 1800), ok = b >= 120, direkt = status !== "mi";
+  var grund = ok ? 0.5*Math.min(f,360) + 0.25*Math.max(0, f-360) : 0;
+  if (!direkt) grund = Math.min(grund, 175);
+  var kind = ok ? kinder*Math.min(b, 300) : 0;
+  var bonus = (ok && direkt && jahrgang >= 2002 && jahrgang <= 2011) ? 200 : 0;
+  var steuer = null;
+  if (brutto > 0 && direkt && ok){
+    var faktor = status === "be" ? 0.92 : status === "se" ? 0.85 : 0.82;
+    var zvE = Math.max(0, brutto*faktor - (status === "se" ? 0 : 1230));
+    steuer = Math.max(0, Math.round((f + grund + kind)*grenzsteuersatz(zvE) - (grund + kind)));
+  }
+  return {b:b, grund:Math.round(grund), kind:Math.round(kind), bonus:bonus, steuer:steuer,
+          sum:Math.round(grund + kind + bonus + (steuer||0))};
+}
+
+function row(id, val, text){
+  var li = $(id), on = val > 0;
+  li.className = on ? "" : "off";
+  li.lastElementChild.textContent = on ? eur.format(val) + " €" : (text || "–");
+}
+
+function update(){
+  var monat = +$("beitrag").value, jahrgang = +$("jahrgang").value || 0;
+  var status = $("det").open ? $("status").value : "an";
+  var brutto = $("det").open ? (+$("brutto").value || 0) : 0;
+  var r = rechne(monat, jahrgang, kinder, status, brutto);
+
+  $("beitragOut").textContent = monat;
+  $("jahrOut").textContent = eur.format(r.b);
+  $("kinder").textContent = kinder;
+  $("z1").className = monat > 0 ? "on" : "";
+  $("z2").className = monat > 30 ? "on" : "";
+  $("z3").className = monat > 150 ? "on" : "";
+
+  $("sum").textContent = eur.format(r.sum);
+  row("rGrund", r.grund);
+  $("rKind").firstElementChild.textContent = "Kinderzulage" + (kinder ? " für " + kinder + (kinder === 1 ? " Kind" : " Kinder") : "");
+  row("rKind", r.kind);
+  row("rBonus", r.bonus, jahrgang >= 2002 ? "–" : "ab Jahrgang 2002");
+  row("rSteuer", r.steuer || 0, r.steuer === 0 ? "0 €" : (status === "mi" ? "entfällt" : "Einkommen angeben"));
+
+  $("quote").textContent = r.b > 0
+    ? "Auf " + eur.format(r.b) + " € Eigenbeitrag kommen " + eur.format(r.sum) + " € vom Staat. Das sind " + Math.round(r.sum/r.b*100) + " % obendrauf."
+    : "";
+
+  var tip;
+  if (monat < 10) tip = "Ab 10 € im Monat fließen Zulagen. Darunter zahlt der Staat nichts dazu.";
+  else if (kinder > 0 && monat < 25) tip = "Mit 25 € im Monat erhalten Sie die volle Kinderzulage von 300 € je Kind.";
+  else if (monat < 150) tip = "Mit 150 € im Monat schöpfen Sie die volle Grundzulage von 540 € aus. Aktuell fehlen " + eur.format(540 - Math.max(r.grund, 0)) + " €.";
+  else if (monat > 150) tip = "Gefördert werden 150 € im Monat. Was darüber liegt, bringt keine weitere Zulage.";
+  else tip = "Sie schöpfen die Grundzulage voll aus. Ob zusätzlich eine Steuererstattung drin ist, klären wir im Gespräch.";
+  if (status === "mi" && monat >= 10) tip = "Über Ihren Ehepartner sind höchstens 175 € Grundzulage möglich. Die Kinderzulage gibt es in voller Höhe.";
+  $("rx").textContent = tip;
+}
+
+["beitrag","jahrgang","status","brutto"].forEach(function(id){ $(id).addEventListener("input", update); });
+$("det").addEventListener("toggle", update);
+$("kMinus").addEventListener("click", function(){ kinder = Math.max(0, kinder-1); update(); });
+$("kPlus").addEventListener("click", function(){ kinder = Math.min(8, kinder+1); update(); });
+$("f").addEventListener("submit", function(e){ e.preventDefault(); });
+
+/* Kontaktbereich aus CONFIG aufbauen */
+(function(){
+  var c = $("contact"), h = "", fehlt = [];
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]; }); }
+  if (CONFIG.bookingUrl){
+    h += '<a class="btn" href="' + esc(CONFIG.bookingUrl) + '" target="_blank" rel="noopener">Termin online buchen</a>';
+    document.querySelectorAll("[data-cta]").forEach(function(a){ a.href = CONFIG.bookingUrl; a.target = "_blank"; a.rel = "noopener"; });
+  } else fehlt.push("Buchungslink");
+  if (CONFIG.whatsapp) h += '<a class="btn ghost" href="https://wa.me/' + esc(CONFIG.whatsapp) + '" target="_blank" rel="noopener">Unverbindlich per WhatsApp schreiben</a>';
+  if (CONFIG.phone) h += '<div class="line"><span>Telefon</span><a href="tel:' + esc(CONFIG.phone.replace(/[^\d+]/g,"")) + '">' + esc(CONFIG.phone) + '</a></div>';
+  else fehlt.push("Telefon");
+  if (CONFIG.mobile) h += '<div class="line"><span>Mobil</span><a href="tel:' + esc(CONFIG.mobile.replace(/[^\d+]/g,"")) + '">' + esc(CONFIG.mobile) + '</a></div>';
+  if (CONFIG.email) h += '<div class="line"><span>E-Mail</span><a href="mailto:' + esc(CONFIG.email) + '">' + esc(CONFIG.email) + '</a></div>';
+  h += '<div class="line"><span>Büro</span><span>' + esc(CONFIG.address || "Blankenburg (Harz)") + '</span></div>';
+  var l = "";
+  if (CONFIG.impressumUrl) l += '<a href="' + esc(CONFIG.impressumUrl) + '" target="_blank" rel="noopener">Impressum</a>'; else fehlt.push("Impressum");
+  if (CONFIG.datenschutzUrl) l += '<a href="' + esc(CONFIG.datenschutzUrl) + '" target="_blank" rel="noopener">Datenschutz</a>'; else fehlt.push("Datenschutz");
+  if (fehlt.length) h += '<div class="draft">Entwurf: Es fehlen noch ' + fehlt.join(", ") + '. Vor dem Teilen eintragen.</div>';
+  c.innerHTML = h; $("legal").innerHTML = l;
+})();
+
+update();
+</script>
+</body>
+</html>
