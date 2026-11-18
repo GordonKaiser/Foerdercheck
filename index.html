@@ -337,7 +337,7 @@ function update(){
   $("rKind").firstElementChild.textContent = "Kinderzulage" + (kinder ? " für " + kinder + (kinder === 1 ? " Kind" : " Kinder") : "");
   row("rKind", r.kind);
   row("rBonus", r.bonus, jahrgang >= 2002 ? "–" : "ab Jahrgang 2002");
-  row("rSteuer", r.steuer || 0, r.steuer === 0 ? "0 €" : (status === "mi" ? "entfällt" : "Einkommen angeben"));
+  row("rSteuer", r.steuer || 0, r.steuer === 0 ? "Zulage ist günstiger" : (status === "mi" ? "entfällt" : "Einkommen angeben"));
 
   $("quote").textContent = r.b > 0
     ? "Auf " + eur.format(r.b) + " € Eigenbeitrag kommen " + eur.format(r.sum) + " € vom Staat. Das sind " + Math.round(r.sum/r.b*100) + " % obendrauf."
@@ -349,6 +349,7 @@ function update(){
   else if (monat < 150) tip = "Mit 150 € im Monat schöpfen Sie die volle Grundzulage von 540 € aus. Aktuell fehlen " + eur.format(540 - Math.max(r.grund, 0)) + " €.";
   else if (monat > 150) tip = "Gefördert werden 150 € im Monat. Was darüber liegt, bringt keine weitere Zulage.";
   else tip = "Sie schöpfen die Grundzulage voll aus. Ob zusätzlich eine Steuererstattung drin ist, klären wir im Gespräch.";
+  if (brutto > 0 && r.steuer === 0 && status !== "mi") tip = "Bei Ihrem Einkommen bringen die Zulagen mehr als der Steuerabzug. Das Finanzamt prüft das automatisch, Sie verlieren nichts. Eine Steuererstattung on top lohnt sich meist erst bei hohem Einkommen.";
   if (status === "mi" && monat >= 10) tip = "Über Ihren Ehepartner sind höchstens 175 € Grundzulage möglich. Die Kinderzulage gibt es in voller Höhe.";
   $("rx").textContent = tip;
 }
