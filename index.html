@@ -104,6 +104,23 @@ details .field:first-of-type{margin-top:20px}
 .befund .btn{background:var(--paper-ink);color:var(--paper);margin-top:18px}
 .befund .btn:hover{background:#17335F}
 
+.hoch{margin:14px 0 0;padding:12px 14px;background:var(--paper-ink);color:var(--paper);border-radius:8px;font-size:14.5px}
+.hoch b{color:var(--gold-soft);font-size:18px;font-variant-numeric:tabular-nums}
+.partner{margin:12px 0 0;font-size:14px;color:var(--paper-muted)}
+.partner b{color:var(--paper-ink)}
+.befund .btn.wa{background:transparent;color:var(--paper-ink);border:1.5px solid var(--paper-ink);margin-top:10px}
+.befund .btn.wa:hover{background:#EDE6D4}
+.trust{list-style:none;margin:16px 0 0;padding:14px 0 0;border-top:1px dashed var(--paper-line);display:grid;gap:6px;font-size:13.5px;color:var(--paper-muted)}
+.trust li{padding-left:20px;position:relative}
+.trust li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700}
+.trust li:first-child{color:var(--paper-ink);font-weight:600}
+.sharelink{display:block;text-align:center;margin-top:14px;font-size:14px;color:var(--paper-muted)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--navy);border-top:1px solid var(--gold);box-shadow:0 -8px 24px rgba(0,0,0,.35)}
+.dock b{display:block;font-family:var(--display);font-weight:800;font-size:22px;color:var(--gold);line-height:1.1;font-variant-numeric:tabular-nums}
+.dock span{font-size:12px;color:var(--muted)}
+.dock .btn{padding:12px 16px;font-size:15px;white-space:nowrap}
+body{padding-bottom:76px}
+@media(min-width:860px){.dock{display:none}body{padding-bottom:0}}
 section.band{border-top:1px solid var(--line);padding:48px 0}
 h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.1;letter-spacing:-.02em;margin:0 0 22px;text-wrap:balance;max-width:22ch}
 .facts{display:grid;gap:0;grid-template-columns:1fr;border-top:1px solid var(--line)}
@@ -219,8 +236,17 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
         <li id="rSteuer"><span>Zusätzliche Steuererstattung, geschätzt</span><span>–</span></li>
       </ul>
       <p class="quote" id="quote"></p>
+      <p class="hoch" id="hoch"></p>
       <div class="rx"><b>Empfehlung</b><span id="rx"></span></div>
-      <a class="btn" href="#kontakt" data-cta>Befund besprechen: Termin bis 16.12. sichern</a>
+      <p class="partner" id="partner"></p>
+      <a class="btn" id="ctaMain" href="#kontakt" data-cta>Termin bis 16.12. sichern</a>
+      <a class="btn wa" id="waResult" href="#kontakt" target="_blank" rel="noopener">Ergebnis per WhatsApp an Gordon schicken</a>
+      <ul class="trust">
+        <li>964 zufriedene Kunden</li>
+        <li>Beratung ohne direkte Kosten für Sie</li>
+        <li>Bei Ihnen zu Hause, im Büro oder online</li>
+      </ul>
+      <a class="sharelink" id="share" href="#" target="_blank" rel="noopener">Kennen Sie jemanden, dem das hilft? Förder-Check per WhatsApp teilen →</a>
     </aside>
   </main>
 </div>
@@ -265,15 +291,18 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
 
 <footer>
   <div class="wrap">
-    <p>Unverbindliche Beispielrechnung auf Basis des Altersvorsorgereformgesetzes (BGBl. I 2026 Nr. 156) für das Beitragsjahr 2027, Stand 14.11.2026. Die tatsächliche Förderung hängt von Ihren persönlichen Verhältnissen und der Festsetzung durch Zulagenstelle und Finanzamt ab. Die Steuererstattung ist eine grobe Schätzung. Diese Seite ersetzt keine Anlage- oder Steuerberatung.</p>
+    <p>Unverbindliche Beispielrechnung auf Basis des Altersvorsorgereformgesetzes (BGBl. I 2026 Nr. 156) für das Beitragsjahr 2027, Stand 14.11.2026. Die tatsächliche Förderung hängt von Ihren persönlichen Verhältnissen und der Festsetzung durch Zulagenstelle und Finanzamt ab. Die Steuererstattung ist eine grobe Schätzung. Die Hochrechnung bis 67 summiert nur die Grundzulage bei gleichbleibenden Angaben, ohne Wertentwicklung und ohne Kinderzulagen. Diese Seite ersetzt keine Anlage- oder Steuerberatung.</p>
     <p>Gordon Kaiser ist selbstständiger Vermögensberater für die Deutsche Vermögensberatung.</p>
     <nav id="legal"></nav>
   </div>
 </footer>
 
+<div class="dock" aria-label="Ihr Ergebnis"><div><b id="dockSum">690 €</b><span>pro Jahr vom Staat</span></div><a class="btn" href="#kontakt" data-cta>Termin sichern</a></div>
+
 <script>
 /* ====== HIER IHRE DATEN EINTRAGEN ====== */
 var CONFIG = {
+  siteUrl: "https://gordonkaiser.github.io/Foerdercheck/",
   bookingUrl: "https://bookings.cloud.microsoft/book/GordonKaiserDeutscheVermgensberatung@dvag02.onmicrosoft.com/s/KH4Sg8VjTECGD5ndzt097g2?ismsaljsauthenabled",
   whatsapp: "491737483298",        // Nummer international ohne +, z. B. 4915112345678
   phone: "03944 3674437",
@@ -343,6 +372,29 @@ function update(){
     ? "Auf " + eur.format(r.b) + " € Eigenbeitrag kommen " + eur.format(r.sum) + " € vom Staat. Das sind " + Math.round(r.sum/r.b*100) + " % obendrauf."
     : "";
 
+  var sumTxt = eur.format(r.sum) + " €";
+  $("ctaMain").textContent = r.sum > 0 ? "Ihre " + sumTxt + " sichern: Termin bis 16.12." : "Termin bis 16.12. sichern";
+  $("dockSum").textContent = sumTxt;
+
+  var jahre = Math.max(0, 67 - (2027 - jahrgang));
+  var gesamt = Math.round((r.grund*jahre + r.bonus)/10)*10;
+  if (jahrgang > 1900 && jahre > 0 && gesamt > 0){
+    $("hoch").style.display = "";
+    $("hoch").innerHTML = "Bis zu Ihrem 67. Geburtstag kommen so rund <b>" + eur.format(gesamt) + " €</b> Grundzulage zusammen" +
+      (kinder ? ", dazu Kinderzulagen, solange Kindergeld fließt." : ".") + " Ohne Zinsen gerechnet.";
+  } else $("hoch").style.display = "none";
+
+  if (status !== "mi" && monat >= 10){
+    $("partner").style.display = "";
+    $("partner").innerHTML = "<b>Mit Partner doppelt:</b> Ihr Partner oder Ihre Partnerin kann mit eigenem Vertrag zusätzlich bis zu 540 € Grundzulage im Jahr erhalten.";
+  } else $("partner").style.display = "none";
+
+  if (CONFIG.whatsapp){
+    var msg = "Hallo Gordon, mein Förder-Check ergab " + sumTxt + " Förderung im ersten Jahr (" + monat + " € im Monat, " +
+      kinder + (kinder === 1 ? " Kind" : " Kinder") + ", Jahrgang " + jahrgang + "). Können wir dazu einen Termin machen?";
+    $("waResult").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(msg);
+  }
+
   var tip;
   if (monat < 10) tip = "Ab 10 € im Monat fließen Zulagen. Darunter zahlt der Staat nichts dazu.";
   else if (kinder > 0 && monat < 25) tip = "Mit 25 € im Monat erhalten Sie die volle Kinderzulage von 300 € je Kind.";
@@ -379,6 +431,8 @@ $("f").addEventListener("submit", function(e){ e.preventDefault(); });
   if (CONFIG.datenschutzUrl) l += '<a href="' + esc(CONFIG.datenschutzUrl) + '" target="_blank" rel="noopener">Datenschutz</a>'; else fehlt.push("Datenschutz");
   if (fehlt.length) h += '<div class="draft">Entwurf: Es fehlen noch ' + fehlt.join(", ") + '. Vor dem Teilen eintragen.</div>';
   c.innerHTML = h; $("legal").innerHTML = l;
+  if (!CONFIG.whatsapp) $("waResult").style.display = "none";
+  $("share").href = "https://wa.me/?text=" + encodeURIComponent("Schau mal, so viel gibt der Staat ab 2027 zur Altersvorsorge dazu. In 30 Sekunden ausgerechnet: " + CONFIG.siteUrl);
 })();
 
 update();
